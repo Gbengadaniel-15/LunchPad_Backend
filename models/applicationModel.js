@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 
 const ApplicationSchema = new mongoose.Schema({
     applicant: {
-        type: mongoose.Schema,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
 

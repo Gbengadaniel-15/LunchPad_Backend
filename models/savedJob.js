@@ -16,4 +16,6 @@ const SavedJobSchema = new mongoose.Schema({
 
 },{timestamps: true})
 
+SavedJobSchema.index({ applicant: 1, job: 1 }, { unique: true })
+
 export default mongoose.model(' SavedJob', SavedJobSchema )
