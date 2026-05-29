@@ -20,7 +20,24 @@ const UserSchema = new mongoose.Schema({
         enum: ['applicant', 'employer', 'admin'],
         default: 'applicant'
 
-    }
+    },
+    isVerified: {
+        type: Boolean,
+        default: false        // for employer verification by admin
+    },
+    isBanned: {
+        type: Boolean,
+        default: false        // admin needs this to ban scammers
+    },
+    cvUrl: {
+        type: String,
+        default: null         // applicant's uploaded CV from Cloudinary
+    },
+    profilePicture: {
+        type: String,
+        default: null
+    },
+
 
 },{timestamps: true} )
 
