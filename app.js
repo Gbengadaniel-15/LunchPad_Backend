@@ -8,6 +8,23 @@ import errorMiddleware from './middleware/errorMiddleware.js'
 //routes
 
 
+const express = require("express");
+
+const app = express();
+
+app.use(express.json());
+
+
+// ROUTES CODE
+app.use("/api/saved-jobs", require("./routes/savedJobRoutes.js"));
+
+app.use("/api/notifications", require("./routes/notificationRoutes"));
+
+
+module.exports = app;
+
+
+
 
 
 
