@@ -38,7 +38,7 @@ export const registerUser = async (req, res, next) => {
     });
 
   } catch (error) {
-    next(errorMiddleware);
+    next(error);
   }
 };
 
@@ -84,7 +84,7 @@ export const loginUser = async (req, res, next) => {
     });
 
   } catch (error) {
-    next(errorMiddleware);
+    next(error);
   }
 };
 
@@ -109,6 +109,6 @@ export const getMe = async (req, res, next) => {
   });
 
   } catch (error) {
-    next(errorMiddleware);
+    next(error);
   }
 };
