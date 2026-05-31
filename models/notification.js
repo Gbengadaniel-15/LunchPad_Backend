@@ -19,7 +19,7 @@ const NotificationSchema = new mongoose.Schema({
             'job_posted',
             'general'
         ],
-        default: 'general'
+        default: 'general' 
     },
     isRead: {
         type: Boolean,

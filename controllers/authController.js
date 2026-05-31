@@ -9,7 +9,7 @@ export const registerUser = async (req, res, next) => {
     const userExists = await User.findOne({ email });
 
     if (userExists) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
         message: "Email already in use",
         data: null });
@@ -29,10 +29,10 @@ export const registerUser = async (req, res, next) => {
   success: true,
   message: 'Registration successful',
   data: {
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
     token: generateToken(user._id)
   }
     });
@@ -75,11 +75,11 @@ export const loginUser = async (req, res, next) => {
       success: true,
       message: 'Login successful',
       data: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        token: generateToken(user._id),
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      token: generateToken(user._id),
       }
     });
 
