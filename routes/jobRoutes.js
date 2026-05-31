@@ -7,7 +7,7 @@ import{
     updateJob,
     deleteJob } from  '../controllers/jobController.js'
 
-import authMiddleware from '../middleware/authMiddleware.js'
+import { authMiddleware } from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 
