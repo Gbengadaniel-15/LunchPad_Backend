@@ -16,7 +16,7 @@ export const createJob = async (req, res, next) => {
     });
 
   } catch (error) {
-    next(errorMiddleware);
+    next(error);
   }
 
 };
@@ -35,7 +35,7 @@ export const getJobs = async (req, res, next) => {
     });
 
   } catch (error) {
-    next(errorMiddleware);
+    next(error);
   }
 }
 
@@ -62,7 +62,7 @@ export const getJob = async (req, res, next) =>{
             data: job
         })
     }catch(error){
-        next(errorMiddleware)
+        next(error)
     }
 }
 
@@ -99,7 +99,7 @@ export const updateJob = async (req, res, next) => {
         data: updatedjob });
 
   } catch (error) {
-    next(errorMiddleware)
+    next(error)
   }
 };
 
@@ -140,6 +140,6 @@ export const deleteJob = async (req, res,next) => {
     })
 
   } catch (error) {
-    next(errorMiddleware)
+    next(error)
   }
 }
