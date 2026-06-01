@@ -3,7 +3,7 @@
 ## How to get started
 
 1. Clone the project
-   git clone https://github.com/YOURNAME/launchpad-backend.git
+   git clone https://github.com/Gbengadaniel-15/LunchPad_Backend.git
 
 2. Go into the folder
    cd launchpad-backend

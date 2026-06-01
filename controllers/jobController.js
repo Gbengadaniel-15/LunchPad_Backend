@@ -1,4 +1,3 @@
-import errorMiddleware from "../middleware/errorMiddleware.js";
 import Job from "../models/jobModel.js";
 
 // @desc    Create a new job position
@@ -26,7 +25,7 @@ export const createJob = async (req, res, next) => {
 // @access  Public
 export const getJobs = async (req, res, next) => {
   try {
-    const jobs = await Job.find();
+    const jobs = await Job.find({ status: 'approved'});
     res.status(200).json({ 
         success: true, 
         message: 'Jobs retrieved successfully',
@@ -45,14 +44,14 @@ export const getJobs = async (req, res, next) => {
 
 export const getJob = async (req, res, next) =>{
     try{
-        const job = await Job.findbyId(req.params.id)
+        const job = await Job.findById(req.params.id)
         .populate('employer', 'name email')
 
         if (!job) {
             return res.status(404).json({
                 success: false,
                 message: 'job not found',
-                data: 'null'
+                data: null
             })
         }
 
@@ -89,7 +88,7 @@ export const updateJob = async (req, res, next) => {
         })
         
     }
-    const updatedjob = await Job.findByIdAndDelete(
+    const updatedjob = await Job.findByIdUpdate(
         req.params.id, req.body ,{new: true, runValidators: true}
 
     )

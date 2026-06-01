@@ -9,7 +9,7 @@ const ApplicationSchema = new mongoose.Schema({
     },
     job: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'job',
+        ref: 'Job',
         required: true
 
     },
@@ -21,7 +21,18 @@ const ApplicationSchema = new mongoose.Schema({
         type: String,
         enum: ['pending', 'accepted','rejected'],
         default: 'pending'
+    },
+    coverLetter: {
+        type: String,
+        default: null         //  USEFUL for fresh grads
+    },
+
+    appliedAt: {
+        type: Date,
+        default: Date.now
     }
+
+
 }, { timestamps: true })
 
 export default mongoose.model('Application', ApplicationSchema)

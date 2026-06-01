@@ -1,15 +1,23 @@
 import mongoose from "mongoose";
 
 const JobSchema = new mongoose.schema({
+    
     title: {
         type: String,
         required: true
     },
+
+    status: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
+        default: 'pending'    // THIS is LaunchPad's core trust feature
+    },
+
     jobType: {
         type: String,
         enum: ['internship', 'full-time', 'part-time', 'NYSC', 'contract'],
         required: true        // Tunde needs to filter by this
-        },
+    },
 
     company: {
         type: String,
@@ -35,13 +43,14 @@ const JobSchema = new mongoose.schema({
 
     salary: {
         type: String
+
     },
     isActive: {
         type: Boolean,
         default: true         // admin can deactivate without deleting
     },
     deadline: {
-        type: Date
+        type: Date        // admin can deactivate without deletin
     },
 
     employer: {
