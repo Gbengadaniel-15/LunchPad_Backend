@@ -141,6 +141,7 @@ export const getJobApplications = async (req, res, next) =>{
     }
 }
 
+//@desc
 // Employer accepts or rejects an application
 // PATCH /api/applications/:applicationId/status
 

@@ -16,6 +16,7 @@ const router = express.Router()
 
 router.use(authMiddleware)
 
+//@desc
 //Applicant only
 
 router.post('/apply/:JobId', roleMiddleware('applicant'),   uploadResume,applyForJob )
