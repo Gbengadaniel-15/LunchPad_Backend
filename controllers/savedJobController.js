@@ -9,7 +9,7 @@ export const saveJob = async (req, res, next) => {
 
     // check if already saved
     const alreadySaved = await SavedJob.findOne({
-      applicant: req.user.id,
+      applicant: req.user._id,
       job: jobId,
     });
 
@@ -22,7 +22,7 @@ export const saveJob = async (req, res, next) => {
     }
 
     const savedJob = await SavedJob.create({
-      applicant: req.user.id,
+      applicant: req.user._id,
       job: jobId,
     });
 
@@ -41,7 +41,7 @@ export const saveJob = async (req, res, next) => {
 // @access  Private (applicant only)
 export const getSavedJobs = async (req, res, next) => {
   try {
-    const savedJobs = await SavedJob.find({ applicant: req.user.id }).populate(
+    const savedJobs = await SavedJob.find({ applicant: req.user._id }).populate(
       "job",
     );
 
@@ -63,7 +63,7 @@ export const removeSavedJob = async (req, res, next) => {
     const { jobId } = req.params;
 
     const savedJob = await SavedJob.findOneAndDelete({
-      applicant: req.user.id,
+      applicant: req.user._id,
       job: jobId,
     });
 

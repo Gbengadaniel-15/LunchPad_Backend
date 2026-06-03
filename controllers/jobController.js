@@ -6,7 +6,7 @@ import Job from "../models/jobModel.js";
 export const createJob = async (req, res, next) => {
   try {
     const newJob = await Job.create({...req.body,
-        employer: req.user.id
+        employer: req.user._id
     });
     res.status(201).json({ 
         success: true, 
@@ -80,7 +80,7 @@ export const updateJob = async (req, res, next) => {
         })
     }
     //only the employer who created it can edit
-    if(job.employer.toString() !== req.user.id) {
+    if(job.employer.toString() !== req.user._id) {
         return res.status(403).json({
             success: false,
             message: 'You are not allowed to edit this job',
@@ -118,7 +118,7 @@ export const deleteJob = async (req, res,next) => {
     });
     }
     // only the emplyer who created it and admin can delete
-    const isEmployer = job.employer.toString() === req.user.id
+    const isEmployer = job.employer.toString() === req.user._id
     const isAdmin = req.user.role === 'admin'
 
     if(!isEmployer && !isAdmin) {

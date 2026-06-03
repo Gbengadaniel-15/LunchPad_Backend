@@ -30,7 +30,7 @@ export const applyForJob = async (req, res, next) =>{
 
         // check if already applied
         const alreadyApplied = await Application.findOne({
-            applicant: req.user.id,
+            applicant: req.user._id,
             job: jobId
         })
         if (alreadyApplied) {
@@ -50,7 +50,7 @@ export const applyForJob = async (req, res, next) =>{
             })
         }
          // Upload CV to Cloudinary
-        const filename = `resume_${req.user.id}_${Date.now()}`
+        const filename = `resume_${req.user._id}_${Date.now()}`
         const cloudinaryResult = await uploadToCloudinary(
             req.file.buffer,
             filename
@@ -58,7 +58,7 @@ export const applyForJob = async (req, res, next) =>{
 
          // Create the application
         const application = await Application.create({
-            applicant: req.user.id,
+            applicant: req.user._id,
             job: jobId,
             resumeUrl: cloudinaryResult.secure_url,
             coverLetter: coverLetter || null,
@@ -83,7 +83,7 @@ export const applyForJob = async (req, res, next) =>{
 export const getMyApplications = async (req, res, next) => {
     try {
         const applications = await Application.find({
-            applicant: req.user.id
+            applicant: req.user._id
         })
         .populate('job', 'title company location jobType status')
         .sort({ appliedAt: -1 })  // newest first
@@ -116,7 +116,7 @@ export const getJobApplications = async (req, res, next) =>{
             })
         }
         // make sure only the employer who posted can see the applicantions
-        if(job.employer.toString() !== req.user.id.toString()){
+        if(job.employer.toString() !== req.user._id.toString()){
             return res.status(403).json({
                 success: false,
                 message: 'You are not authorized to view these applications',
@@ -171,7 +171,7 @@ export const updateApplicationStatus = async(req, res, next) =>{
         }
         
         // make sure only the employer who own the job can update status
-        if (application.job.employer.toString() !== req.user.id.toString()) {
+        if (application.job.employer.toString() !== req.user._id.toString()) {
             return res.status(403).json({
                 success: false,
                 message: 'You are not authorized to update this application',
@@ -212,7 +212,7 @@ export const withdrawApplication  = async (req, res, next) =>{
         }
 
         // make sure only the tunde can withdraw his own application
-        if (application.applicant.toString() !== req.user.id.toString()){
+        if (application.applicant.toString() !== req.user._id.toString()){
             return res.status(403).json({
                 success: false,
                 message: 'You are not authorized to withdraw this application',

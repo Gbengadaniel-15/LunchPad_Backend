@@ -3,7 +3,7 @@ import User from '../models/User.js';
 //  Get current user profile
 export const getProfile = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await User.findById(req.user._id).select('-password');
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -28,7 +28,7 @@ export const updateProfile = async (req, res, next) => {
   try {
     const { name, profilePicture } = req.body;
 
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user._id);
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -64,7 +64,7 @@ export const updateProfile = async (req, res, next) => {
 // Delete current user account
 export const deleteAccount = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user._id);
     if (!user) {
       return res.status(404).json({
         success: false,
