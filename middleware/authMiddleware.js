@@ -3,12 +3,16 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
-export const verifyToken = async (req, res, next) => {
+export const authMiddleware = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ message: 'No token, authorization denied' });
+      return res.status(401).json({ 
+        success: false,
+        message: 'No token, authorization denied',
+        data: null
+      });
     }
 
     const token = authHeader.split(' ')[1];
@@ -17,12 +21,15 @@ export const verifyToken = async (req, res, next) => {
     req.user = await User.findById(decoded.id).select('-password');
 
     if (!req.user) {
-      return res.status(401).json({ message: 'User no longer exists' });
+      return res.status(401).json({ 
+        success: false,
+        message: 'User no longer exists',
+        data: null
+      });
     }
-
     next();
 
   } catch (error) {
-    res.status(401).json({ message: 'Token is not valid' });
+    next(error)
   }
 };
