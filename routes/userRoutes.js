@@ -1,12 +1,40 @@
 import express from 'express';
-import { getProfile, updateProfile, deleteAccount } from '../controllers/userController.js';
-import { verifyToken } from '../middleware/authMiddleware.js';
+import {
+  getProfile,
+  updateProfile,
+  changePassword,
+  deleteAccount
+} from '../controllers/userController.js';
+import { authMiddleware } from '../middleware/authMiddleware.js';
+import roleMiddleware from '../middleware/roleMiddleware.js';
+import { upload } from '../services/cloudinaryService.js';
+import { validateChangePassword, validateUpdateProfile } from '../utils/validators.js';
 
 const router = express.Router();
 
+// All user routes require authentication
+router.use(authMiddleware);
 
-router.get('/profile', verifyToken, getProfile);
-router.put('/profile', verifyToken, updateProfile);
-router.delete('/account', verifyToken, deleteAccount);
+// GET    /api/user/profile      — any authenticated role
+router.get('/profile', getProfile);
+
+// PUT    /api/user/profile      — any authenticated role
+//   accepts optional multipart/form-data with a 'avatar' file field
+router.put(
+  '/profile',
+  upload.single('avatar'),
+  validateUpdateProfile,
+  updateProfile
+);
+
+// PUT    /api/user/change-password — any authenticated role
+router.put('/change-password', validateChangePassword, changePassword);
+
+// DELETE /api/user/account      — applicants and employers only
+router.delete(
+  '/account',
+  roleMiddleware('applicant', 'employer'),
+  deleteAccount
+);
 
 export default router;

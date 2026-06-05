@@ -1,29 +1,46 @@
-import express from 'express'
+import express from 'express';
+import {
+  createJob,
+  getJobs,
+  getJob,
+  updateJob,
+  deleteJob
+} from '../controllers/jobController.js';
+import { authMiddleware } from '../middleware/authMiddleware.js';
+import roleMiddleware from '../middleware/roleMiddleware.js';
+import { validateJob } from '../utils/validators.js';
 
-import{
-    createJob,
-    getJobs,
-    getJob,
-    updateJob,
-    deleteJob } from  '../controllers/jobController.js'
+const router = express.Router();
 
-import { authMiddleware } from '../middleware/authMiddleware.js'
-import  roleMiddleware from '../middleware/roleMiddleware.js'
-import { validateJob } from '../utils/validators.js'
+// ── PUBLIC routes (no auth required) ─────────────────────────────────────────
+router.get('/', getJobs);
+router.get('/:id', getJob);
 
-const router = express.Router()
+// ── PROTECTED routes ──────────────────────────────────────────────────────────
+// POST   /api/jobs       — employer only
+router.post(
+  '/',
+  authMiddleware,
+  roleMiddleware('employer'),
+  validateJob,
+  createJob
+);
 
-router.use(authMiddleware)
-router.use(roleMiddleware)
+// PUT    /api/jobs/:id   — employer only (ownership enforced in controller)
+router.put(
+  '/:id',
+  authMiddleware,
+  roleMiddleware('employer'),
+  validateJob,
+  updateJob
+);
 
- router.route('/')
-        .get(getJobs)
-        .post(roleMiddleware('employer'),validateJob, createJob)  // create job - login required
+// DELETE /api/jobs/:id   — employer (owner) or admin
+router.delete(
+  '/:id',
+  authMiddleware,
+  roleMiddleware('employer', 'admin'),
+  deleteJob
+);
 
-router.route('/:id')
-      .get(getJob)             // get single job - public
-      .put(roleMiddleware('employer'),validateJob, updateJob)    // edit job - login required
-      .delete( deleteJob)    // delete job - login required
-      
-
-export default router
+export default router;

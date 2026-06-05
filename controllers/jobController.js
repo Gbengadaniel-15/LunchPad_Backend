@@ -1,144 +1,151 @@
-import Job from "../models/jobModel.js";
+import Job from '../models/jobModel.js';
 
-// @desc    Create a new job position
+// @desc    Create a new job posting
 // @route   POST /api/jobs
 // @access  Employer only
 export const createJob = async (req, res, next) => {
   try {
-    const newJob = await Job.create({...req.body,
-        employer: req.user._id
+    const newJob = await Job.create({
+      ...req.body,
+      employer: req.user._id
     });
-    res.status(201).json({ 
-        success: true, 
-        message: 'Job created successfully',
-        data: newJob 
+
+    res.status(201).json({
+      success: true,
+      message: 'Job created successfully — it is pending admin approval',
+      data: newJob
     });
 
   } catch (error) {
     next(error);
   }
-
 };
 
-// @desc    Get all job postings
+// @desc    Get all approved job postings
 // @route   GET /api/jobs
 // @access  Public
 export const getJobs = async (req, res, next) => {
   try {
-    const jobs = await Job.find({ status: 'approved'});
-    res.status(200).json({ 
-        success: true, 
-        message: 'Jobs retrieved successfully',
-        count: jobs.length, 
-        data: jobs 
+    const jobs = await Job.find({ status: 'approved', isActive: true })
+      .populate('employer', 'name email isVerified')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      message: 'Jobs retrieved successfully',
+      count: jobs.length,
+      data: jobs
     });
 
   } catch (error) {
     next(error);
   }
-}
+};
 
-  // @desc    Get single job
+// @desc    Get a single job
 // @route   GET /api/jobs/:id
 // @access  Public
+export const getJob = async (req, res, next) => {
+  try {
+    const job = await Job.findById(req.params.id)
+      .populate('employer', 'name email isVerified');
 
-export const getJob = async (req, res, next) =>{
-    try{
-        const job = await Job.findById(req.params.id)
-        .populate('employer', 'name email')
-
-        if (!job) {
-            return res.status(404).json({
-                success: false,
-                message: 'job not found',
-                data: null
-            })
-        }
-
-        res.status(200).json({
-            success: true,
-            message: 'job retrieved successfully',
-            data: job
-        })
-    }catch(error){
-        next(error)
+    if (!job) {
+      return res.status(404).json({
+        success: false,
+        message: 'Job not found',
+        data: null
+      });
     }
-}
 
-// @desc    Update/Edit an existing job
+    res.status(200).json({
+      success: true,
+      message: 'Job retrieved successfully',
+      data: job
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Update an existing job
 // @route   PUT /api/jobs/:id
 // @access  Employer only (owner)
 export const updateJob = async (req, res, next) => {
   try {
-    const job = await Job.findById(req.params.id)
+    const job = await Job.findById(req.params.id);
 
-    if(!job) {
-        return res.status(404).json({
-            success: false,
-            message: "Job not found",
-            data: null
-        })
+    if (!job) {
+      return res.status(404).json({
+        success: false,
+        message: 'Job not found',
+        data: null
+      });
     }
-    //only the employer who created it can edit
-    if(job.employer.toString() !== req.user._id) {
-        return res.status(403).json({
-            success: false,
-            message: 'You are not allowed to edit this job',
-            data : null
-        })
-        
-    }
-    const updatedjob = await Job.findByIdUpdate(
-        req.params.id, req.body ,{new: true, runValidators: true}
 
-    )
-    res.status(200).json({ 
-        success: true,
-        message: 'job updated Successfully', 
-        data: updatedjob });
+    // Only the employer who created the job may edit it
+    if (job.employer.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: 'You are not allowed to edit this job',
+        data: null
+      });
+    }
+
+    // Re-submit for approval whenever content changes
+    const updatedJob = await Job.findByIdAndUpdate(
+      req.params.id,
+      { ...req.body, status: 'pending' },
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Job updated successfully — it is pending re-approval',
+      data: updatedJob
+    });
 
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
 // @desc    Delete a job posting
 // @route   DELETE /api/jobs/:id
-// @access  Employer only (owner)
-
-export const deleteJob = async (req, res,next) => {
+// @access  Employer (owner) or Admin
+export const deleteJob = async (req, res, next) => {
   try {
     const job = await Job.findById(req.params.id);
 
     if (!job) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "Job not found",
-        data: null 
-    });
-    }
-    // only the emplyer who created it and admin can delete
-    const isEmployer = job.employer.toString() === req.user._id
-    const isAdmin = req.user.role === 'admin'
-
-    if(!isEmployer && !isAdmin) {
-        return res.status(403).json({
-            success:false,
-            message:'You are not allowed to delete this job',
-            data: null
-
-        })
+      return res.status(404).json({
+        success: false,
+        message: 'Job not found',
+        data: null
+      });
     }
 
-    await Job.findByIdAndDelete(req.params.id)
+    const isOwner = job.employer.toString() === req.user._id.toString();
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isOwner && !isAdmin) {
+      return res.status(403).json({
+        success: false,
+        message: 'You are not allowed to delete this job',
+        data: null
+      });
+    }
+
+    await Job.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
       success: true,
       message: 'Job deleted successfully',
       data: null
-    })
+    });
 
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
