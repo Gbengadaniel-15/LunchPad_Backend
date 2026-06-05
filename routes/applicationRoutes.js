@@ -6,11 +6,11 @@ import {
     updateApplicationStatus,
     applyForJob
 
-} from '../controllers/applicationController'
-import { authMiddleware } from '../middleware/authMiddleware'
-import roleMiddleware from '../middleware/roleMiddleware'
-import { uploadResume } from '../middleware/uploadMiddleware'
-import {  validateApplication, validateStatus } from '../utils/validators'
+} from '../controllers/applicationController.js'
+import { authMiddleware } from '../middleware/authMiddleware.js'
+import roleMiddleware from '../middleware/roleMiddleware.js'
+import { uploadResume } from '../middleware/uploadMiddleware.js'
+import {  validateApplication, validateStatus } from '../utils/validators.js'
 
 
 const router = express.Router()

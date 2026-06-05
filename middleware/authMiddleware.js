@@ -1,7 +1,7 @@
 // middleware/authMiddleware.js
 
 import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+import User from '../models/userModel.js';
 
 export const authMiddleware = async (req, res, next) => {
   try {
@@ -33,3 +33,6 @@ export const authMiddleware = async (req, res, next) => {
     next(error)
   }
 };
+
+
+export { authMiddleware as verifyToken }; 

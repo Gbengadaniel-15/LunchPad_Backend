@@ -23,7 +23,7 @@ router.use(roleMiddleware)
 router.route('/:id')
       .get(getJob)             // get single job - public
       .put(roleMiddleware('employer'),validateJob, updateJob)    // edit job - login required
-      .deleteJob( deleteJob)    // delete job - login required
+      .delete( deleteJob)    // delete job - login required
       
 
 export default router

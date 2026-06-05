@@ -8,10 +8,10 @@ import {
     approveJob,
     getAllApplications,
     rejectJob
-} from '../controllers/adminController'
+} from '../controllers/adminController.js'
 
-import { authMiddleware } from "../middleware/authMiddleware";
-import roleMiddleware from "../middleware/roleMiddleware";
+import { authMiddleware } from "../middleware/authMiddleware.js";
+import roleMiddleware from "../middleware/roleMiddleware.js";
 
 
 const router = express.Router()
