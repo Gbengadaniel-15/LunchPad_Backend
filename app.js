@@ -5,9 +5,15 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import errorMiddleware from './middleware/errorMiddleware.js'
 
-//routes
+//import routes
 
-
+import adminRoutes from './routes/adminRoutes.js'
+import applicationRoutes from './routes/applicationRoutes.js'
+import authRoutes from './routes/authRoutes.js'
+import notiicationRoutes from './routes/notificationRoutes.js'
+import savedJobRoutes from './routes/savedJobRoutes.js'
+import jobRoutes from './routes/jobRoutes.js'
+import userRoutes from './routes/userRoutes.js'
 
 
 
@@ -26,9 +32,18 @@ app.use(express.urlencoded({ extended: true }))
 app.get('/', (req, res) =>{
     res.json({message: 'launchpad Api is running'})
 })
-// routes will come here later
+
+
+// use the routes
 // app.use('/api/auth', authRoutes)
-// app.use('/api/jobs', jobRoutes)
+
+app.use('/api/auth', authRoutes)
+app.use('/api/admin', adminRoutes)
+app.use('/api/user', userRoutes)
+app.use('/api/jobs', jobRoutes)
+app.use('/api/notifications', notiicationRoutes)
+app.use('/api/applications', applicationRoutes)
+app.use('/api/saved-job', savedJobRoutes)
 
 
 
