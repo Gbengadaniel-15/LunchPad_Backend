@@ -40,7 +40,9 @@ const uploadToCloudinary = (fileBuffer, filename) => {
             {
                 folder: 'launchpad/resumes',
                 resource_type: 'raw',
-                public_id: filename
+                public_id: filename,
+                type: 'upload',
+                access_mode: 'public'
 
             },
             (error, result) => {

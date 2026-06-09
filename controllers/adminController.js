@@ -1,6 +1,12 @@
 import User from '../models/userModel.js';
 import Application from '../models/applicationModel.js';
 import Job from '../models/jobModel.js'
+import {
+    sendJobApprovedEmail,
+    sendJobRejectedEmail,
+    sendAccountBannedEmail,
+    sendAccountVerifiedEmail
+}  from '../services/emailservice.js'
 
 //@desc Get all User
 //@ route GET/api/admin/users
@@ -82,6 +88,8 @@ export const banUser = async (req ,res, next) =>{
         user.isBanned = !user.isBanned
         await user.save()
 
+        await sendAccountBannedEmail(user)
+
         res.status(200).json({
             success:true,
             message: user.isBanned
@@ -121,6 +129,8 @@ export const verifyEmployer = async (req, res, next) => {
 
     user.isVerified = true;
     await user.save();
+
+    await sendAccountVerifiedEmail(user)
 
     res.status(200).json({
       success: true,
@@ -190,6 +200,10 @@ export const approveJob = async (req, res, next) => {
         job.status = 'approved'
         await job.save()
 
+        //email service
+        const employer = await User.findById(job.employer)
+        await sendJobApprovedEmail(employer,job)
+
         res.status(200).json({
             success: true,
             message: 'Job approved successfully — it is now live for applicants',
@@ -199,7 +213,7 @@ export const approveJob = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
-}
+} 
 
 // @desc Reject a job listing
 // @route PUT /api/admin/jobs/:id/reject
@@ -227,6 +241,10 @@ export const rejectJob = async (req, res, next) => {
 
         job.status = 'rejected'
         await job.save()
+
+        //email services
+        const employer = await User.findById(job.employer)
+        await sendJobRejectedEmail(employer, job)
 
         res.status(200).json({
             success: true,

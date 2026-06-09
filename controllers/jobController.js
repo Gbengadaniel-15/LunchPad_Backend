@@ -1,4 +1,5 @@
 import Job from '../models/jobModel.js';
+import { sendJobPendingEmail } from '../services/emailservice.js';
 
 // @desc    Create a new job posting
 // @route   POST /api/jobs
@@ -9,6 +10,9 @@ export const createJob = async (req, res, next) => {
       ...req.body,
       employer: req.user._id
     });
+
+    //
+    await sendJobPendingEmail(newJob, req.user)
 
     res.status(201).json({
       success: true,

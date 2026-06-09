@@ -1,6 +1,11 @@
 import Application from '../models/applicationModel.js'
 import Job from '../models/jobModel.js'
+import User from '../models/userModel.js'
 import { uploadToCloudinary } from '../services/cloudinaryService.js'
+import { 
+    sendApplicationRecieveEmail, 
+    sendApplicationAcceptedEmail,
+    sendApplicationRejectedEmail } from '../services/emailservice.js';
 
 
 export const applyForJob = async (req, res, next) =>{
@@ -50,7 +55,7 @@ export const applyForJob = async (req, res, next) =>{
             })
         }
          // Upload CV to Cloudinary
-        const filename = `resume_${req.user._id}_${Date.now()}`
+        const filename = `resume_${req.user._id}_${Date.now()}.pdf`
         const cloudinaryResult = await uploadToCloudinary(
             req.file.buffer,
             filename
@@ -64,6 +69,9 @@ export const applyForJob = async (req, res, next) =>{
             coverLetter: coverLetter || null,
             status: 'pending'
         })
+
+        const employer = await User.findById(job.employer)
+        await sendApplicationRecieveEmail(employer, req.user, job)
 
         res.status(201).json({
             success: true,
@@ -181,6 +189,14 @@ export const updateApplicationStatus = async(req, res, next) =>{
         // Update the status
         application.status = status
         await application.save()
+
+        const applicant = await User.findById(application.applicant)
+
+        if (status === 'accepted') {
+            await sendApplicationAcceptedEmail( applicant, application.job)
+        }else{
+            await sendApplicationRejectedEmail( applicant, application.job)
+        }
 
         res.status(200).json({
             success: true,

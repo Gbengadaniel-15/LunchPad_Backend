@@ -15,26 +15,22 @@ const router = express.Router();
 // All user routes require authentication
 router.use(authMiddleware);
 
+
+///////
+
 // GET    /api/user/profile      — any authenticated role
 router.get('/profile', getProfile);
 
 // PUT    /api/user/profile      — any authenticated role
-//   accepts optional multipart/form-data with a 'avatar' file field
 router.put(
-  '/profile',
-  upload.single('avatar'),
-  validateUpdateProfile,
-  updateProfile
-);
+  '/profile', upload.single('avatar'), validateUpdateProfile, updateProfile);
 
 // PUT    /api/user/change-password — any authenticated role
 router.put('/change-password', validateChangePassword, changePassword);
 
 // DELETE /api/user/account      — applicants and employers only
-router.delete(
-  '/account',
-  roleMiddleware('applicant', 'employer'),
-  deleteAccount
-);
+router.delete('/account',  roleMiddleware ('applicant', 'employer'), deleteAccount );
+
+
 
 export default router;

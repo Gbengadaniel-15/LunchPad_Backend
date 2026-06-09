@@ -1,6 +1,8 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import generateToken from "../utils/generateToken.js";
+import { sendWelcomeEmail } from "../services/emailservice.js";
+
 
 
 export const registerUser = async (req, res, next) => {
@@ -24,6 +26,8 @@ export const registerUser = async (req, res, next) => {
       password: hashedPassword,
       role,
     });
+
+    await sendWelcomeEmail(user)
 
     res.status(201).json({
   success: true,

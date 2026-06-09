@@ -17,13 +17,7 @@ router.use(authMiddleware);
 
 // ── Applicant only ────────────────────────────────────────────────────────────
 // Note: param name is :jobId (lowercase) — must match req.params.jobId in controller
-router.post(
-  '/apply/:jobId',
-  roleMiddleware('applicant'),
-  validateApplication,
-  uploadResume,
-  applyForJob
-);
+router.post('/apply/:jobId', roleMiddleware('applicant'), validateApplication, uploadResume, applyForJob);
 
 router.get(
   '/my-applications',
