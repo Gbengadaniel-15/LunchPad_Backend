@@ -1,4 +1,4 @@
-import SavedJob from "../models/SavedJob.js";
+import SavedJob from "../models/savedJob.js";
 
 // @desc    Save a job
 // @route   POST /api/saved/:jobId
