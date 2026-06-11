@@ -37,7 +37,7 @@ export const sendWelcomeEmail = async (user) => {
             to: user.email,
             subject: 'Welcome to LaunchPad',
             html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <h2 style="color: #1a1a2e;">Welcome to LaunchPad, ${user.name}! 🚀</h2>
+                    <h2 style="color: #1a1a2e;">Welcome to LaunchPad, ${user.firstName}! 🚀</h2>
                     <p>Your first step into tech starts here.</p>
                     <p>LaunchPad is built exclusively for  tech students and fresh graduates like you.</p>
                     <p>Here is what you can do on LaunchPad:</p>
@@ -77,7 +77,7 @@ export const sendApplicationRecieveEmail = async (employer, applicant, job) =>{
                         </tr>
                         <tr>
                             <td style="padding: 8px; border: 1px solid #ddd;"><strong>Applicant Name</strong></td>
-                            <td style="padding: 8px; border: 1px solid #ddd;">${applicant.name}</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">${applicant.firstName}</td>
                         </tr>
                         <tr>
                             <td style="padding: 8px; border: 1px solid #ddd;"><strong>Applicant Email</strong></td>
@@ -108,7 +108,7 @@ export const sendApplicationAcceptedEmail = async ( applicant, job) =>{
             to: applicant.email,
             subject: `Congratulations! Your application for ${job.title} was accepted`,
             html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <h2 style="color: #00b4d8;">Congratulations ${applicant.name}! 🎉</h2>
+                    <h2 style="color: #00b4d8;">Congratulations ${applicant.firstName}! 🎉</h2>
                     <p>Your application has been accepted.</p>
                     <table style="width: 100%; border-collapse: collapse;">
                         <tr>
@@ -149,7 +149,7 @@ export const sendApplicationRejectedEmail = async (applicant, job) => {
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                     <h2 style="color: #1a1a2e;">Application Update</h2>
-                    <p>Hi ${applicant.name},</p>
+                    <p>Hi ${applicant.firstName},</p>
                     <p>Thank you for applying for <strong>${job.title}</strong> at <strong>${job.company}</strong>.</p>
                     <p>After careful review, the employer has decided to move forward with other candidates at this time.</p>
                     <p>Do not be discouraged — keep applying. LaunchPad has more verified opportunities waiting for you.</p>
@@ -176,7 +176,7 @@ export const sendJobApprovedEmail = async (employer, job) => {
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                     <h2 style="color: #00b4d8;">Job Listing Approved ✅</h2>
-                    <p>Hi ${employer.name},</p>
+                    <p>Hi ${employer.firstName},</p>
                     <p>Your job listing has been reviewed and approved by our team.</p>
                     <table style="width: 100%; border-collapse: collapse;">
                         <tr>
@@ -215,7 +215,7 @@ export const sendJobRejectedEmail = async (employer, job) => {
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                     <h2 style="color: #1a1a2e;">Job Listing Not Approved</h2>
-                    <p>Hi ${employer.name},</p>
+                    <p>Hi ${employer.firstName},</p>
                     <p>Unfortunately your job listing has been reviewed and could not be approved at this time.</p>
                     <table style="width: 100%; border-collapse: collapse;">
                         <tr>
@@ -246,7 +246,7 @@ export const sendAccountVerifiedEmail = async (employer) => {
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                     <h2 style="color: #00b4d8;">Account Verified ✅</h2>
-                    <p>Hi ${employer.name},</p>
+                    <p>Hi ${employer.firstName},</p>
                     <p>Your employer account has been reviewed and verified by the LaunchPad team.</p>
                     <p>You can now post job listings that will be visible to thousands of Nigerian tech students and fresh graduates.</p>
                     <p style="color: #00b4d8;">Welcome to the LaunchPad employer community!</p>
@@ -272,7 +272,7 @@ export const sendAccountBannedEmail = async (user) => {
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                     <h2 style="color: #e63946;">Account Suspended</h2>
-                    <p>Hi ${user.name},</p>
+                    <p>Hi ${user.firstName},</p>
                     <p>Your LaunchPad account has been suspended due to a violation of our community guidelines.</p>
                     <p>If you believe this is a mistake, please contact our support team.</p>
                     <p>— The LaunchPad Team</p>
@@ -313,7 +313,7 @@ export const sendJobPendingEmail = async (job, employer) => {
                         </tr>
                         <tr>
                             <td style="padding: 8px; border: 1px solid #ddd;"><strong>Employer Name</strong></td>
-                            <td style="padding: 8px; border: 1px solid #ddd;">${employer.name}</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">${employer.firstName}</td>
                         </tr>
                         <tr>
                             <td style="padding: 8px; border: 1px solid #ddd;"><strong>Employer Email</strong></td>

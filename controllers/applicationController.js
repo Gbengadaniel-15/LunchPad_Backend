@@ -133,7 +133,7 @@ export const getJobApplications = async (req, res, next) =>{
         }
 
         const applications = await Application.find({ job : jobId})
-            .populate('applicant', 'name email')
+            .populate('applicant', 'firstName lastName email')
             .sort ({ appliedAt: -1 })
 
         res.status(200).json({
@@ -159,7 +159,7 @@ export const updateApplicationStatus = async(req, res, next) =>{
         const { status } = req.body
 
         // validate status value
-        if (!['accepted', 'rejected'].includes(status)) {
+        if (!['accepted', 'rejected','shortlisted'].includes(status)) {
             return res.status(400).json({
                 success: false,
                 message: 'Status must be either accepted or rejected',
@@ -194,7 +194,7 @@ export const updateApplicationStatus = async(req, res, next) =>{
 
         if (status === 'accepted') {
             await sendApplicationAcceptedEmail( applicant, application.job)
-        }else{
+        }else if (status === 'rejected') {
             await sendApplicationRejectedEmail( applicant, application.job)
         }
 

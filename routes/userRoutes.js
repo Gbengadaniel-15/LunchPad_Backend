@@ -3,8 +3,10 @@ import {
   getProfile,
   updateProfile,
   changePassword,
-  deleteAccount
+  deleteAccount,
+  uploadCV
 } from '../controllers/userController.js';
+import { uploadResume } from '../middleware/uploadMiddleware.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import roleMiddleware from '../middleware/roleMiddleware.js';
 import { upload } from '../services/cloudinaryService.js';
@@ -23,7 +25,10 @@ router.get('/profile', getProfile);
 
 // PUT    /api/user/profile      — any authenticated role
 router.put(
-  '/profile', upload.single('avatar'), validateUpdateProfile, updateProfile);
+  '/update-profile', upload.single('avatar'), validateUpdateProfile, updateProfile);
+
+// PUT /api/user/upload-cv — applicants only
+router.put('/upload-cv', roleMiddleware('applicant'), uploadResume, uploadCV);
 
 // PUT    /api/user/change-password — any authenticated role
 router.put('/change-password', validateChangePassword, changePassword);

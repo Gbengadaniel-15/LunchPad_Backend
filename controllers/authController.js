@@ -7,7 +7,7 @@ import { sendWelcomeEmail } from "../services/emailservice.js";
 
 export const registerUser = async (req, res, next) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { firstName, lastName, email, password, role, techTrack, bio } = req.body;
     const userExists = await User.findOne({ email });
 
     if (userExists) {
@@ -21,10 +21,13 @@ export const registerUser = async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = await User.create({
-      name,
+      firstName,
+      lastName,
       email,
       password: hashedPassword,
       role,
+      techTrack: techTrack || null,
+      bio: bio || null
     });
 
     await sendWelcomeEmail(user)
@@ -34,8 +37,10 @@ export const registerUser = async (req, res, next) => {
   message: 'Registration successful',
   data: {
       _id: user._id,
-      name: user.name,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
+      techTrack: user.techTrack,
       role: user.role,
     token: generateToken(user._id)
   }

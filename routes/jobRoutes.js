@@ -43,4 +43,6 @@ router.delete(
   deleteJob
 );
 
+router.get('/my-jobs', authMiddleware, roleMiddleware('employer'), getMyJobs)
+
 export default router;
