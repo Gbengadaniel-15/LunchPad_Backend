@@ -30,21 +30,26 @@ export const registerUser = async (req, res, next) => {
       bio: bio || null
     });
 
+    // ✅ Correct — email failure doesn't affect registration
+  try {
     await sendWelcomeEmail(user)
-
-    res.status(201).json({
-  success: true,
-  message: 'Registration successful',
-  data: {
-      _id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      techTrack: user.techTrack,
-      role: user.role,
-    token: generateToken(user._id)
+  } catch (emailError) {
+    console.log('Email failed but registration successful:', emailError.message)
   }
-    });
+  
+  res.status(201).json({
+    success: true,
+    message: 'Registration successful',
+    data: {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        techTrack: user.techTrack,
+        role: user.role,
+        token: generateToken(user._id)
+    }
+})
 
   } catch (error) {
     next(error);
