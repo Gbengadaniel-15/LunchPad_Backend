@@ -43,6 +43,11 @@ const JobSchema = new mongoose.Schema({
 
     salary: {
         type: String
+    },
+
+    tags: {
+        type: [String],
+        default: []
 
     },
     isActive: {

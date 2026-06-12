@@ -16,9 +16,13 @@ export const validate = (req, res, next) => {
 
 // ── AUTH ──────────────────────────────────────────────────────────────────────
 export const validateRegister = [
-  body('name')
-    .notEmpty().withMessage('Name is required')
-    .isLength({ min: 2 }).withMessage('Name must be at least 2 characters'),
+  body('firstName')
+    .notEmpty().withMessage('First name is required')
+    .isLength({ min: 2 }).withMessage('First name must be at least 2 characters'),
+
+body('lastName')
+    .notEmpty().withMessage('Last name is required')
+    .isLength({ min: 2 }).withMessage('Last name must be at least 2 characters'),
 
   body('email')
     .notEmpty().withMessage('Email is required')
@@ -48,10 +52,15 @@ export const validateLogin = [
 
 // ── USER PROFILE ──────────────────────────────────────────────────────────────
 export const validateUpdateProfile = [
-  body('name')
+  body('firstName')
     .optional()
-    .isLength({ min: 2 }).withMessage('Name must be at least 2 characters'),
-
+    .isLength({ min: 2 }).withMessage('First name must be at least 2 characters'),
+  body('lastName')
+    .optional()
+    .isLength({ min: 2 }).withMessage('Last name must be at least 2 characters'),
+  body('bio')
+    .optional()
+    .isLength({ max: 500 }).withMessage('Bio cannot exceed 500 characters'),
   validate
 ];
 
@@ -109,7 +118,7 @@ export const validateApplication = [
 export const validateStatus = [
   body('status')
     .notEmpty().withMessage('Status is required')
-    .isIn(['accepted', 'rejected']).withMessage('Status must be accepted or rejected'),
+    .isIn(['accepted', 'rejected','shortlisted']).withMessage('Status must be accepted, rejected or shortlisted'),
 
   validate
 ];

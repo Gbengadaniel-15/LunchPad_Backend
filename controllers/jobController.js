@@ -73,6 +73,25 @@ export const getJob = async (req, res, next) => {
   }
 };
 
+// @desc Get only myJobs as Employer
+//@route PUT/api/jobs/:id
+// @access  Employer only (owner)
+export const getMyJobs = async (req, res, next) => {
+    try {
+        const jobs = await Job.find({ employer: req.user._id })
+            .sort({ createdAt: -1 })
+
+        res.status(200).json({
+            success: true,
+            message: 'Jobs retrieved successfully',
+            count: jobs.length,
+            data: jobs
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 // @desc    Update an existing job
 // @route   PUT /api/jobs/:id
 // @access  Employer only (owner)

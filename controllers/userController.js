@@ -32,7 +32,7 @@ export const getProfile = async (req, res, next) => {
 // @access  Private (any authenticated role)
 export const updateProfile = async (req, res, next) => {
   try {
-    const { name } = req.body;
+    const {firstName, lastName, bio, techTrack } = req.body;
 
     const user = await User.findById(req.user._id);
     if (!user) {
@@ -43,7 +43,10 @@ export const updateProfile = async (req, res, next) => {
       });
     }
 
-    if (name) user.name = name;
+    if (firstName) user.firstName = firstName;
+    if (lastName) user.lastName = lastName;
+    if (bio) user.bio = bio;
+    if (techTrack) user.techTrack = techTrack;
 
     // Handle profile picture upload via Cloudinary if a file was attached
     if (req.file) {
@@ -59,9 +62,13 @@ export const updateProfile = async (req, res, next) => {
       message: 'Profile updated successfully',
       data: {
         _id: updatedUser._id,
+        firstName: updatedUser.firstName,  
+        lastName: updatedUser.lastName,     
         name: updatedUser.name,
         email: updatedUser.email,
+        bio: updatedUser.bio,
         role: updatedUser.role,
+        techTrack: updatedUser.techTrack,   
         profilePicture: updatedUser.profilePicture,
         cvUrl: updatedUser.cvUrl
       }
@@ -71,6 +78,37 @@ export const updateProfile = async (req, res, next) => {
     next(error);
   }
 };
+
+// PUT /api/user/upload-cv
+export const uploadCV = async (req, res, next) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please upload a CV',
+                data: null
+            })
+        }
+
+        const filename = `cv_${req.user._id}_${Date.now()}.pdf`
+        const result = await uploadToCloudinary(req.file.buffer, filename)
+
+        const user = await User.findByIdAndUpdate(
+            req.user._id,
+            { cvUrl: result.secure_url },
+            { new: true }
+        ).select('-password')
+
+        res.status(200).json({
+            success: true,
+            message: 'CV uploaded successfully',
+            data: user
+        })
+
+    } catch (error) {
+        next(error)
+    }
+}
 
 // @desc    Change password for current user
 // @route   PUT /api/user/change-password

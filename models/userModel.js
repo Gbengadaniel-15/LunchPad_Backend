@@ -1,10 +1,27 @@
 import mongoose from 'mongoose'
 
 const UserSchema = new mongoose.Schema({
-    name: {
+    firstName: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
+    lastName: {
+        type: String,
+        required: true,
+        trim: true
+    },
+
+    techTrack: {
+        type: String,
+        default: null
+    },
+
+    bio: {
+         type: String, 
+         default: null 
+    }, 
+
     email: {
         type: String,
         required: true,
@@ -21,6 +38,21 @@ const UserSchema = new mongoose.Schema({
         default: 'applicant'
 
     },
+    companyName: { 
+        type: String, 
+        default: null 
+    },
+    
+    companyWebsite: { 
+        type: String, 
+        default: null 
+    },
+
+    companySize: { 
+        type: String, 
+        default: null 
+    },
+
     isVerified: {
         type: Boolean,
         default: false        // for employer verification by admin
