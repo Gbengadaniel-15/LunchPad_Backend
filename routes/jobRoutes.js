@@ -4,7 +4,8 @@ import {
   getJobs,
   getJob,
   updateJob,
-  deleteJob
+  deleteJob,
+  getMyJobs
 } from '../controllers/jobController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import roleMiddleware from '../middleware/roleMiddleware.js';
